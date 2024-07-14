@@ -22,12 +22,15 @@ golden_cookie_gray = cv2.cvtColor(golden_cookie, cv2.COLOR_BGR2GRAY)
 # Set up Tesseract executable path for Windows (adjust the path if needed)
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
+
 def now():
     return datetime.datetime.now()
 
+
 def click_cookie():
-    click(385,566)
-    #print(f'Cookie clicked at {now()}')
+    click(385, 566)
+    # print(f'Cookie clicked at {now()}')
+
 
 def find_golden_cookie():
     try:
@@ -39,7 +42,8 @@ def find_golden_cookie():
         screenshot_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
 
         # Match the template (golden cookie) with the screenshot
-        result = cv2.matchTemplate(screenshot_gray, golden_cookie_gray, cv2.TM_CCOEFF_NORMED)
+        result = cv2.matchTemplate(
+            screenshot_gray, golden_cookie_gray, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
         # Set a threshold to detect the golden cookie
@@ -51,31 +55,35 @@ def find_golden_cookie():
             center_x, center_y = x + w // 2, y + h // 2
 
             # Click the center of the golden cookie if it is not near upgrades
-            if(center_x < 2200):
+            if (center_x < 2200):
                 click(center_x, center_y)
-            #print(f'Golden cookie clicked at ({center_x}, {center_y}) at {now()}')
+            # print(f'Golden cookie clicked at ({center_x}, {center_y}) at {now()}')
             return
-        #print(f'Golden cookie not found at {now()}')
+        # print(f'Golden cookie not found at {now()}')
         return
     except Exception as e:
         print(f"An error occurred {e} at {now()}")
         return False
-    
+
+
 def display_coordinates():
-    if(keyboard.is_pressed('w')):
+    if (keyboard.is_pressed('w')):
         print(f"coordinates: {get_position()} at {now()}")
         pass
-    
+
+
 def upgrade():
-    click(2420,220)
-    #click(2420,860)
-    #print(f'attempted upgrade at {now()}')
+    click(2420, 220)
+    # click(2420,860)
+    # print(f'attempted upgrade at {now()}')
+
 
 def get_cookie_count():
     try:
         # Define the region of interest (ROI) for the cookie count
         # You may need to adjust these coordinates based on your screen resolution and game window position
-        x, y, width, height = 260, 160, 240, 60  # Example coordinates, adjust accordingly
+        # Example coordinates, adjust accordingly
+        x, y, width, height = 260, 160, 240, 60
 
         # Take a screenshot of the defined region
         screenshot = pyautogui.screenshot(region=(x, y, width, height))
@@ -92,35 +100,39 @@ def get_cookie_count():
 
         if cookie_count:
             cookie_count = int(cookie_count)
-        
+
         try:
             if cookie_count is not None:
-                #print(f'Current cookie count: {cookie_count} at {now()}')
+                # print(f'Current cookie count: {cookie_count} at {now()}')
                 pass
             else:
-                print(f'Could not read cookie count at {now()}')    
+                print(f'Could not read cookie count at {now()}')
         except Exception as e:
             print(f"An unexpected error occurred: {e} at {now()}")
             return
 
     except Exception as e:
-        print(f"An error occurred while reading the cookie count: {e} at {now()}")
+        print(
+            f"An error occurred while reading the cookie count: {e} at {now()}")
         return None
-    
-def click(x,y):
-    if(y > 30 and y < 1380):
-        pyautogui.click(x,y)
+
+
+def click(x, y):
+    if (y > 30 and y < 1380):
+        pyautogui.click(x, y)
+
 
 def get_position():
     return pyautogui.position()
 
+
 def cycle():
-    #start_time = now()
-    #click_cookie()
+    # start_time = now()
+    click_cookie()
     find_golden_cookie()
-    #display_coordinates()
-    #get_cookie_count()
-    #print(f'this cycle took {now() - start_time} to complete')
+    # display_coordinates()
+    # get_cookie_count()
+    # print(f'this cycle took {now() - start_time} to complete')
     # global cycles
     # global last_upgrade
     # cycles += 1
@@ -135,16 +147,17 @@ def cycle():
 
     return
 
+
 if __name__ == '__main__':
     print(f"Began program at {now()}")
     time.sleep(3)
     while True:
         try:
-            if(keyboard.is_pressed('q')):
+            if (keyboard.is_pressed('q')):
                 print(f'Script stopped by user at {now()}')
                 break
             cycle()
-            #time.sleep(0.1)
+            # time.sleep(0.1)
         except Exception as e:
             print(f"An unexpected error occurred {e} at {now()} ")
             break
